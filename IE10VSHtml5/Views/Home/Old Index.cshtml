@@ -1,0 +1,38 @@
+﻿<h2>title</h2>
+
+<form id="mainForm" action="home/upload" method="POST" enctype="multipart/form-data">
+    <input type="file" id="fileInput" multiple="true" name="yuck"/>
+    <button type="submit" id="uploadButton">Upload</button>
+</form>
+
+<script src="~/Scripts/jquery-1.9.1.js"></script>
+<script type="text/javascript">
+
+    var files = [];
+
+    $(document).ready(function() {
+
+        
+
+        //$('#mainForm').submit(function () {
+
+        //    var formData = new FormData($(this)[0]);
+            
+            
+        //    $.ajax({
+        //        url: '/home/upload',
+        //        data: formData,
+        //        cache: false,
+        //        contentType: false,
+        //        processData: false,
+        //        type: 'POST',
+        //        success: function (data, textStatus, jqXHR) {
+        //            console.log('yesss');
+        //            // Callback code
+        //        }
+        //    });
+
+        //});
+
+    });
+</script>
