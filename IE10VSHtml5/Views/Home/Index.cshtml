@@ -1,4 +1,5 @@
-﻿<h2>HTML5 Form Data Dummy Demo</h2>
+﻿<!DOCTYPE html>
+<h2>HTML5 Form Data Dummy Demo</h2>
 <h4>This demo app is to investigate HTML5 support for IE10 Desktop that not working. (IE10 Metro is working fine)</h4>
 
 <input type="file" id="fileInput" multiple="true"/>
@@ -10,14 +11,17 @@
 <script src="~/Scripts/jquery-1.9.1.js"></script>
 <script type="text/javascript">
 
-    var files = [];
+    var files = [], formData = null,
+        
+        // If set to false, formData sent by XHR2 directly, otherwise formData sent by JQuery.Ajax
+        useJQuery = false;
 
     $(document).ready(function() {
 
         $('#fileInput').change(function (e) {
             // Add all selected files to 'files' array
             
-            $.each(e.target.files, function(i, item) {
+            $.each(e.target.files, function (i, item) {
                 files.push(item);
             });
         });
@@ -26,12 +30,24 @@
         $('#uploadButton').click(function () {
             
             // Put files to FormData
-            var formData = new FormData();
+            formData = new FormData();
             $.each(files, function(i, item) {
                 formData.append('X-FILE-' + i, item);
             });
-            
-            // Send FormData to server
+
+            // Send FormData to server using XHR2 directly
+            if (!useJQuery) {
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', '/home/upload', true);
+                xhr.addEventListener("load", function(e) {
+                    process(e.target.response);
+                });
+
+                xhr.send(formData);
+                return;
+            }
+
+            // Send FormData to server using JQuery
             $.ajax({
                 url: '/home/upload',
                 data: formData,
@@ -40,13 +56,18 @@
                 processData: false,
                 type: 'POST',
                 success: function (data) {
-                    if (data == "YES") {
-                        $('#status').text("File Uploaded");
-                    } else {
-                        $('#status').text("File NOT Uploaded");
-                    }
+                    process(data);
                 }
             });
+
+            function process(result) {
+                if (result == "YES") {
+                    $('#status').text("File Uploaded");
+                } else {
+                    $('#status').text("File NOT Uploaded");
+                }
+            }
+
         });
     });
 </script>
